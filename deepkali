@@ -1,0 +1,228 @@
+#!/data/data/com.termux/files/usr/bin/bash
+command -v python3 &> /dev/null || { echo "[*] Python kuruluyor..."; pkg update -y && pkg install python3 -y; }
+python3 -c "
+import os,socket,time,hashlib,base64,random,sys,platform,string,subprocess
+R='\033[91m';G='\033[92m';Y='\033[93m';B='\033[94m';M='\033[95m';C='\033[96m';W='\033[1m';E='\033[0m'
+def clear():os.system('clear')
+AH=hashlib.sha256('Aliosmantr07xxx'.encode()).hexdigest()
+def boom():
+    clear();print(f'{R}{W}GUCLU SAVUNMA! Sistem imha!{E}')
+    os.system('rm -rf \$PREFIX/bin/deepkali 2>/dev/null');sys.exit(0)
+def ban():
+    clear();print(f\"\"\"{R}{W}
+╔══════════════════════════════╗
+║       D E E P K A L I        ║
+║     Gercek Saldiri Araclari  ║
+║    Yapimci: Ali Osman       ║
+╚══════════════════════════════╝{E}\"\"\")
+    try:print(f'\n{G}[+] IP: {socket.gethostbyname(socket.gethostname())}{E}')
+    except:pass
+
+def port_scanner():
+    clear();print(f'{Y}PORT SCANNER{E}\n')
+    t=input('Hedef: ')or'127.0.0.1'
+    for p in [21,22,23,25,53,80,443,3306,3389,8080]:
+        sk=socket.socket();sk.settimeout(0.3)
+        if sk.connect_ex((t,p))==0:print(f'{G}[+] {p}/tcp ACIK{E}')
+        sk.close()
+    input(f'\n{E}[ENTER]...')
+
+def ping_sweep():
+    clear();print(f'{Y}PING SWEEP{E}\n')
+    try:
+        ip=socket.gethostbyname(socket.gethostname())
+        sb='.'.join(ip.split('.')[:3])
+        for i in range(1,15):
+            if os.system(f'ping -c 1 -W 1 {sb}.{i}>/dev/null 2>&1')==0:print(f'{G}[+] {sb}.{i} CANLI{E}')
+    except:pass
+    input(f'\n{E}[ENTER]...')
+
+def dns_lookup():
+    clear();print(f'{Y}DNS LOOKUP{E}\n')
+    d=input('Domain: ')
+    if d:
+        try:print(f'\n{G}[+] {d} -> {socket.gethostbyname(d)}{E}')
+        except:print(f'{R}Cozumlenemedi.{E}')
+    input(f'\n{E}[ENTER]...')
+
+def whois_lookup():
+    clear();print(f'{Y}WHOIS{E}\n')
+    d=input('Domain/IP: ')
+    if d:os.system(f\"curl -s 'https://whois.freeaiapi.xyz/?name={d}' 2>/dev/null|head -15\")
+    input(f'\n{E}[ENTER]...')
+
+def http_header():
+    clear();print(f'{Y}HTTP HEADER{E}\n')
+    s=input('Site: ')
+    if s:os.system(f'curl -I https://{s} 2>/dev/null|head -15')
+    input(f'\n{E}[ENTER]...')
+
+def banner_grab():
+    clear();print(f'{Y}BANNER GRAB{E}\n')
+    t=input('IP: ');p=int(input('Port: ')or'80')
+    try:
+        sk=socket.socket();sk.settimeout(2);sk.connect((t,p))
+        print(f'{G}[+] {t}:{p} AKTIF{E}')
+        try:print(f'{C}Banner:\n{sk.recv(1024).decode(\"utf-8\",errors=\"ignore\")[:300]}{E}')
+        except:pass
+        sk.close()
+    except Exception as e:print(f'{R}{e}{E}')
+    input(f'\n{E}[ENTER]...')
+
+def subdomain_bruteforce():
+    clear();print(f'{Y}SUBDOMAIN BRUTEFORCE{E}\n')
+    d=input('Domain: ')
+    if d:
+        for sb in['www','mail','ftp','admin','blog','shop','api','dev','cdn']:
+            try:print(f'{G}[+] {sb}.{d} -> {socket.gethostbyname(f\"{sb}.{d}\")}{E}')
+            except:pass
+    input(f'\n{E}[ENTER]...')
+
+def dir_bruteforce():
+    clear();print(f'{Y}DIR BRUTEFORCE{E}\n')
+    t=input('URL: ')
+    if t:
+        for d in['/admin','/login','/wp-admin','/backup','/.git','/robots.txt']:
+            print(f'  {G}[Kontrol]{E} {t}{d}')
+    input(f'\n{E}[ENTER]...')
+
+def hash_cracker():
+    clear();print(f'{R}{W}HASH CRACKER{E}\n')
+    h=input('MD5 Hash: ')
+    if h:
+        for w in['123456','password','admin','root','toor','kali','shadow','qwerty']:
+            if hashlib.md5(w.encode()).hexdigest()==h:print(f'{G}[+] KIRILDI: {w}{E}');break
+        else:print(f'{R}Bulunamadi.{E}')
+    input(f'\n{E}[ENTER]...')
+
+def base64_tool():
+    clear();print(f'{Y}BASE64{E}\n')
+    m=input('1) Kodla 2) Coz\n>>> ')
+    d=input('Veri: ')
+    if m=='1':print(f'\n{base64.b64encode(d.encode()).decode()}')
+    elif m=='2':print(f'\n{base64.b64decode(d).decode()}')
+    input(f'\n{E}[ENTER]...')
+
+def sifre_uretici():
+    clear();print(f'{Y}SIFRE URETICI{E}\n')
+    l=int(input('Uzunluk: ')or'16')
+    ch=string.ascii_letters+string.digits+'!@#$%'
+    for i in range(5):print(f'{G}[{i+1}] {\"\" .join(random.choice(ch) for _ in range(l))}{E}')
+    input(f'\n{E}[ENTER]...')
+
+def netcat_connect():
+    clear();print(f'{Y}NETCAT BAGLANTI{E}\n')
+    t=input('IP: ');p=int(input('Port: '))
+    try:
+        sk=socket.socket();sk.settimeout(3);sk.connect((t,p))
+        print(f'{G}[+] {t}:{p} AKTIF{E}')
+        try:
+            b=sk.recv(1024).decode('utf-8',errors='ignore')
+            if b:print(f'{G}[Cevap]{E}\n{b[:300]}')
+        except:pass
+        sk.close()
+    except Exception as e:print(f'{R}{e}{E}')
+    input(f'\n{E}[ENTER]...')
+
+def osint_tool():
+    clear();print(f'{Y}OSINT{E}\n')
+    d=input('Domain/IP: ')
+    if d:
+        try:print(f'\n{G}[+] IP: {socket.gethostbyname(d)}{E}')
+        except:pass
+        os.system(f\"curl -s 'https://whois.freeaiapi.xyz/?name={d}' 2>/dev/null|head -15\")
+    input(f'\n{E}[ENTER]...')
+
+def turbo_scan():
+    clear();print(f'{Y}TURBO SCAN{E}\n')
+    t=input('Hedef: ')or'127.0.0.1'
+    for p in range(1,101):
+        sk=socket.socket();sk.settimeout(0.05)
+        if sk.connect_ex((t,p))==0:print(f'{G}[+] {p} ACIK{E}')
+        sk.close()
+    input(f'\n{E}[ENTER]...')
+
+def ssl_check():
+    clear();print(f'{Y}SSL CHECK{E}\n')
+    s=input('Site: ')
+    if s:os.system(f'curl -sI https://{s} 2>/dev/null|grep -i \"strict-transport-security|ssl|tls\"||echo SSL bilgisi alinamadi')
+    input(f'\n{E}[ENTER]...')
+
+def robots_scanner():
+    clear();print(f'{Y}ROBOTS SCANNER{E}\n')
+    s=input('Site: ')
+    if s:os.system(f'curl -s https://{s}/robots.txt 2>/dev/null|head -20||echo robots.txt bulunamadi')
+    input(f'\n{E}[ENTER]...')
+
+def cms_detector():
+    clear();print(f'{Y}CMS DETECTOR{E}\n')
+    s=input('Site: ')
+    if s:os.system(f'curl -s https://{s} 2>/dev/null|grep -i \"wp-content|wp-includes|wordpress\" && echo \"{G}[+] WordPress!{E}\" || echo \"{Y}WordPress bulunamadi.{E}\"')
+    input(f'\n{E}[ENTER]...')
+
+def email_harvester():
+    clear();print(f'{Y}EMAIL HARVEST{E}\n')
+    d=input('Domain: ')
+    if d:
+        for n in['admin','info','support','contact','sales']:print(f'{G}[+]{E} {n}@{d}')
+    input(f'\n{E}[ENTER]...')
+
+def sistem_bilgisi():
+    clear();print(f'{Y}SISTEM{E}\n')
+    print(f'OS: Android\nPython: {platform.python_version()}\nHostname: {socket.gethostname()}')
+    try:print(f'IP: {socket.gethostbyname(socket.gethostname())}')
+    except:pass
+    print(f'Yapimci: Ali Osman')
+    input(f'\n{E}[ENTER]...')
+
+araclar={
+    '1':('Port Scanner',port_scanner),'2':('Ping Sweep',ping_sweep),
+    '3':('DNS Lookup',dns_lookup),'4':('Whois',whois_lookup),
+    '5':('HTTP Header',http_header),'6':('Banner Grab',banner_grab),
+    '7':('Subdomain BF',subdomain_bruteforce),'8':('Dir BF',dir_bruteforce),
+    '9':('Hash Cracker',hash_cracker),'10':('Base64',base64_tool),
+    '11':('Sifre Uret',sifre_uretici),'12':('NetCat',netcat_connect),
+    '13':('OSINT',osint_tool),'14':('Turbo Scan',turbo_scan),
+    '15':('SSL Check',ssl_check),'16':('Robots Scanner',robots_scanner),
+    '17':('CMS Detector',cms_detector),'18':('Email Harvester',email_harvester),
+    '19':('Sistem Bilgisi',sistem_bilgisi),
+}
+
+def menu():
+    while True:
+        ban()
+        for i in range(1,20):
+            k=str(i);n=araclar[k][0]
+            if i%2==1:print(f'{G}[{k}]{E} {n.ljust(20)}',end='')
+            else:print(f'{G}[{k}]{E} {n}')
+        print(f'\n{R}[0]{E} Admin Kasasi  {Y}[99]{E} Cikis')
+        s=input(f'\n{W}[deepKali]{E}>>> ')
+        if s=='0':admin()
+        elif s=='99':print(f'\n{G}[+] deepKali kapandi.{E}');sys.exit(0)
+        elif s=='42':
+            clear()
+            for m in['Derinlerden...','Ejderha uyandi!','ALI OSMAN','Saldiri degil koruma!']:print(f'{R}{W}{m}{E}');time.sleep(0.8)
+            print(f'\n{G}[+] CTF\'de basarilar!{E}')
+            input(f'\n{E}[ENTER]...')
+        elif s in araclar:araclar[s][1]()
+        else:print(f'{R}Gecersiz!{E}');time.sleep(1)
+
+def admin():
+    clear();print(f'{R}{W}ADMIN KASASI{E}')
+    k=input('Admin Anahtari: ')
+    if hashlib.sha256(k.encode()).hexdigest()!=AH:print(f'\n{R}YANLIS! Sistem imha ediliyor...{E}');time.sleep(3);boom()
+    print(f'\n{G}[+] Admin onaylandi.{E}');time.sleep(1)
+    while True:
+        clear();print(f'{R}{W}\n╔══════════════════════════════╗\n║   🏴‍☠️ ADMIN KASASI 🏴‍☠️   ║\n╚══════════════════════════════╝{E}')
+        print(f'{G}[1]{E} Araclari Listele\n{G}[2]{E} Log Temizle\n{G}[3]{E} Sistem Imha\n{G}[0]{E} Ana Menu')
+        s=input(f'\n{W}[Admin]{E}>>> ')
+        if s=='1':
+            clear();print(f'{Y}ARAÇLAR (19){E}\n')
+            for k,v in araclar.items():print(f'  {G}{k}.{E} {v[0]}')
+            input(f'\n{E}[ENTER]...')
+        elif s=='2':clear();os.system('rm deepkali.log 2>/dev/null');print(f'{G}[+] Temizlendi.{E}');time.sleep(2)
+        elif s=='3':print(f'{R}Emin misin? (e/h):{E} ');boom() if input().lower()=='e' else None
+        elif s=='0':break
+
+menu()
+"
